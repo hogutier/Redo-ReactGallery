@@ -14,9 +14,25 @@ class Picture extends React.Component {
   }
 
   // Your code here! We need to get our pictures from the API!
+  async ComponentDidMount () {
+    const pictureId = this.props.match.params.pictureId
+    const {data} = await axios.get('/pictures/:pictureId')
+    this.setState({picture: data})
+  }
+
+  async componentWillReceiveProps (nextProps){
+    const next = Number(nextProps.match.params.pictureId)
+    const current = this.state.picture.id
+    if (next !== current){
+      const {data} = await axios.get(`/pictures/${next}`)
+      this.setState({
+        picture: data
+      })
+    }
+  }
 
   render () {
-    // Remember, this comes from the Route! We want to do math with it,
+    // Remember, this comes from the Route! We want to do match with it,
     // so we coerce it to a number (because it's a string originally)
     const pictureId = Number(this.props.match.params.pictureId)
 
